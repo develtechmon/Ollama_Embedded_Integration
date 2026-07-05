@@ -5,7 +5,7 @@ from piper import PiperVoice
 
 MODEL, SR = "qwen3.5:4b", 16000
 whisper = WhisperModel("base.en", device="cpu", compute_type="int8")
-voice = PiperVoice.load("en_US-lessac-medium.onnx")
+voice = PiperVoice.load("en_US-lessac-high.onnx")
 
 def listen(sec=5):
     input("\n[Enter, then speak...] ")
@@ -18,7 +18,7 @@ def say(text):
     with wave.open(buf, "wb") as w: voice.synthesize_wav(text, w)
     buf.seek(0); data, sr = sf.read(buf); sd.play(data, sr); sd.wait()
 
-msgs = [{"role":"system","content":"You are a friendly voice assistant. Reply in one or two short sentences — it will be spoken aloud."}]
+msgs = [{"role":"system","content":"You are a friendly robot voice assistant. Reply naturally in one short sentence. Use simple words and natural punctuation for speech."}]
 print("Voice chat ready. Say 'quit' to exit.")
 while True:
     u = listen()

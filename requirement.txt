@@ -4,3 +4,4 @@ pip install ollama
 pip install piper-tts
 python -m piper.download_voices en_US-lessac-medium
 pip install pyserial
+pip install opencv-python

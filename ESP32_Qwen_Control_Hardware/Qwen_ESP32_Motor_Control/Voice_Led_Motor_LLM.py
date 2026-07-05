@@ -1,3 +1,19 @@
+# Your voice command
+#       ↓
+# Whisper converts speech to text
+#       ↓
+# Qwen decides if a tool/function is needed
+#       ↓
+# Python reads Qwen's requested tool name
+#       ↓
+# Python finds the matching real function in DISPATCH
+#       ↓
+# Python runs that function
+#       ↓
+# Function sends serial command to ESP32
+#       ↓
+# ESP32 moves motor / controls LED
+
 import io
 import wave
 import json
