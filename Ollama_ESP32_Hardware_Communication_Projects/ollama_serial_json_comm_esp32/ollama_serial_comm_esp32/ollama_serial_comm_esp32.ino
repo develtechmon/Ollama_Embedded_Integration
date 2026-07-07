@@ -1,12 +1,11 @@
-#define LED_PIN 2
-#define MOTOR_PIN 18
+#define LED_PIN 5
+#define MOTOR_PIN 4
 
 String command = "";
 
 void setup()
 {
   Serial.begin(115200);
-
   pinMode(LED_PIN, OUTPUT);
   pinMode(MOTOR_PIN, OUTPUT);
 }
@@ -16,7 +15,6 @@ void loop()
   if (Serial.available())
   {
     command = Serial.readStringUntil('\n');
-
     command.trim();
 
     if (command == "LED_ON")
