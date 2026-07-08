@@ -2,7 +2,7 @@ import ollama
 import socket
 import json
 
-ESP32_IP = "10.68.173.153"   # <-- the IP the ESP32 printed on boot
+ESP32_IP = "10.46.237.153"   # <-- the IP the ESP32 printed on boot
 ESP32_PORT = 8080
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

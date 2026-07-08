@@ -10,6 +10,7 @@ pip install opencv-python
 # Python 3.11
 pip install ollama faster-whisper sounddevice soundfile kokoro-onnx pyserial numpy
 pip install opencv-contrib-python
+pip install requests
 
 cd C:\Users\lukas\Desktop\My_Project\AI_Robot_Project
 curl -L -o kokoro-v1.0.onnx "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx"

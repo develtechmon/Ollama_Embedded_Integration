@@ -2,7 +2,7 @@
 #include <WebServer.h>
 
 const char* ssid = "Galaxy S24 Ultra 0997";
-const char* password = "YOUR_PASSWORD";   // change it — the old one is public now
+const char* password = "Lukas@92";   // change it — the old one is public now
 
 WebServer server(80);
 
