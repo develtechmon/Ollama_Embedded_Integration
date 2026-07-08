@@ -65,9 +65,22 @@ The method are as :
 2. Using Wifi Protocol
 ```
 
+The default communication is without setting up the `OLLAMA_HOST` in environment variables. Therefore, to runn code, we can just simply run it as follow
+```
+response = ollama.chat( <------------- Here by default it's ollama.chat and model can be inferenced diretly 
+        model=MODEL,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": user}
+        ],
+        think=False,
+        format="json"
+    )
 
-If you want to conenct using `WIFi` please following the following approach in `G14` to ensure the port is accessible
-For this to work you have to implement the following 1st, otherwise the communcation between ESp32 to Ollama in G14 laptop wont work.
+```
+If you want to connect using `WIFi` please following the following approach in `G14` to ensure the port is accessible
+For this to work you have to implement the following 1st, otherwise the communcation between ESp32 to Ollama in G14 laptop wont work. In this case
+we're overriding `ollama.chat` to use `client.chat` as shown below.
 
 ## Please follow this Step
 1. Right-click Ollama in the system tray → Quit (fully quit, don't just close window).

@@ -32,6 +32,8 @@ from piper import PiperVoice
 COM_PORT = "COM9"
 BAUDRATE = 115200
 
+client = ollama.Client(host="http://127.0.0.1:11434")
+
 esp = serial.Serial(
     COM_PORT,
     BAUDRATE,
@@ -375,7 +377,7 @@ while True:
     ]
 
     try:
-        response = ollama.chat(
+        response = client.chat(
             model=MODEL,
             messages=messages,
             tools=TOOLS,
@@ -406,7 +408,7 @@ while True:
                     }
                 )
 
-            final = ollama.chat(
+            final = client.chat(
                 model=MODEL,
                 messages=messages,
                 tools=TOOLS,

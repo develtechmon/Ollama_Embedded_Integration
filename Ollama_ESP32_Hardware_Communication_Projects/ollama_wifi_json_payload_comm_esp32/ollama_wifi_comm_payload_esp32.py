@@ -12,6 +12,8 @@ netf = sock.makefile("r")              # gives us .readline(), just like serial
 
 MODEL = "qwen3.5:4b"
 
+client = ollama.Client(host="http://127.0.0.1:11434")
+
 SYSTEM_PROMPT = """
 You are a robot controller.
 
@@ -38,7 +40,7 @@ CMD = {
 
 while True:
     user = input("Command: ")
-    response = ollama.chat(
+    response = client.chat(
         model=MODEL,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},

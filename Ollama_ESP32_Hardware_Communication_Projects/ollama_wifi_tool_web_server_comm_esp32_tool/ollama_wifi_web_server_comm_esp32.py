@@ -4,6 +4,8 @@ import requests
 ESP32_IP = "10.68.173.153"
 MODEL = "qwen3.5:4b"
 
+client = ollama.Client(host="http://127.0.0.1:11434")
+
 # --- Hardware functions: each returns what the ESP32 ACTUALLY said ---
 def _send(path):
     try:
@@ -62,7 +64,7 @@ TOOLS = [
 while True:
     user_input = input("You: ")
 
-    response = ollama.chat(
+    response = client.chat(
         model=MODEL,
         messages=[{"role": "user", "content": user_input}],
         tools=TOOLS,

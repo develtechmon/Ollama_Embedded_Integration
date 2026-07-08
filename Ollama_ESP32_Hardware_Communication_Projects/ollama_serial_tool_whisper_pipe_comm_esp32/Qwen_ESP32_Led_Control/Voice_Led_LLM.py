@@ -14,6 +14,8 @@ MODEL, SR = "qwen3.5:4b", 16000
 whisper = WhisperModel("base.en", device="cpu", compute_type="int8")
 voice = PiperVoice.load("en_US-lessac-medium.onnx")
 
+client = ollama.Client(host="http://127.0.0.1:11434")
+
 def set_led(state: bool) -> str:
     esp.write(b"LED:1\n" if state else b"LED:0\n")
     return esp.readline().decode().strip()          # returns the ESP32's OK:ON / OK:OFF
@@ -43,14 +45,16 @@ while True:
     print("You:", cmd)
     if "quit" in cmd.lower(): break
     msgs = [{"role":"user","content":cmd}]
-    r = ollama.chat(model=MODEL, messages=msgs, tools=TOOLS, think=False)
+    #r = ollama.chat(model=MODEL, messages=msgs, tools=TOOLS, think=False)
+    r = client.chat(model=MODEL, messages=msgs, tools=TOOLS, think=False)
+
     if r.message.tool_calls:
         msgs.append(r.message)
         for c in r.message.tool_calls:
             fn = DISPATCH.get(c.function.name)
             res = fn(**c.function.arguments) if fn else "unknown"
             msgs.append({"role":"tool","tool_name":c.function.name,"content":str(res)})
-        final = ollama.chat(model=MODEL, messages=msgs, tools=TOOLS, think=False)
+        final = client.chat(model=MODEL, messages=msgs, tools=TOOLS, think=False)
         say(final.message.content or "Done.")
     else:
         say(r.message.content or "I didn't catch a command.")   # abstains — no LED fire

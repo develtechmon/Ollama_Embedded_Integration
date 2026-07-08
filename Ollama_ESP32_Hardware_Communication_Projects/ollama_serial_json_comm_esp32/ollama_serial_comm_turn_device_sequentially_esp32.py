@@ -6,6 +6,8 @@ esp32 = serial.Serial(port='COM9', baudrate=115200, timeout=1)
 
 MODEL = "qwen3.5:4b"
 
+client = ollama.Client(host="http://127.0.0.1:11434")
+
 SYSTEM_PROMPT = """
 You are a robot controller.
 
@@ -25,7 +27,7 @@ Return only the JSON object, no code fences, no extra text.
 
 while True:
     user = input("Command: ")
-    response = ollama.chat(
+    response = client.chat(
         model=MODEL,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},

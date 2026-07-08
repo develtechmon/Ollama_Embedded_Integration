@@ -7,6 +7,8 @@ esp32 = serial.Serial(port='COM9', baudrate=115200, timeout=1)
 time.sleep(2)                 # let ESP32 finish booting
 esp32.reset_input_buffer()    # throw away boot text before we start
 
+client = ollama.Client(host="http://127.0.0.1:11434")
+
 MODEL = "qwen3.5:4b"
 
 SYSTEM_PROMPT = """
@@ -35,7 +37,7 @@ CMD = {
 
 while True:
     user = input("Command: ")
-    response = ollama.chat(
+    response = client.chat(
         model=MODEL,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
