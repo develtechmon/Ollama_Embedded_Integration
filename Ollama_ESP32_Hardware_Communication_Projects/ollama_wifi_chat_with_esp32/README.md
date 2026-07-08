@@ -21,3 +21,6 @@ For this to work you have to implement the following 1st, otherwise the communca
    ```
    Ollama is running
    ```
+8. Then upload the `ollama_wifi_chat_with_esp32.ino` code attached in this project. Please ensure the `OLLAMA_URL` ip address match to G14 IP4 address as in step `7`.
+9. Once done upload, change the Serial Monitor to `New Line` to see the behaviour.
+10. From serial monitor, type the chat you want and then press enter. You should see the respond immediately.
