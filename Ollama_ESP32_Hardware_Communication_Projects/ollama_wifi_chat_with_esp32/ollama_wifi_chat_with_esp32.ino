@@ -18,13 +18,6 @@ void connectWiFi() {
 }
 
 void askOllama(const String& prompt) {
-  HTTPClient http;
-  http.begin(OLLAMA_URL);
-  http.addHeader("Content-Type", "application/json");
-  http.setTimeout(60000);   // model can take a while on first token — 60s is safe
-
-  // Build the request body. stream:false = one lump reply (easier).
-  // Escape quotes and newlines in the prompt so we don't break the JSON.
   String safe = prompt;
   safe.replace("\\", "\\\\");
   safe.replace("\"", "\\\"");
@@ -32,32 +25,41 @@ void askOllama(const String& prompt) {
 
   String body = String("{\"model\":\"") + MODEL +
                 "\",\"prompt\":\"" + safe +
-                "\",\"stream\":false,\"think\":false}";
+                "\",\"stream\":false,\"think\":false,\"keep_alive\":-1}";
 
-  int code = http.POST(body);
-  if (code == 200) {
-    String reply = http.getString();
-    // Ollama returns JSON like {"response":"...","done":true,...}
-    // Cheap extract without a JSON lib — find "response":"..." field.
-    int keyPos = reply.indexOf("\"response\":\"");
-    if (keyPos >= 0) {
-      int start = keyPos + 12;                       // past `"response":"`
-      int end = reply.indexOf("\",\"done\"", start); // Ollama always follows response with ,"done"
-      if (end > start) {
-        String answer = reply.substring(start, end);
-        answer.replace("\\n", "\n");
-        answer.replace("\\\"", "\"");
-        Serial.println("\nQwen: " + answer + "\n");
-      } else {
-        Serial.println("Parse fail. Raw: " + reply);
+  for (int attempt = 1; attempt <= 3; attempt++) {
+    WiFiClient client;             // fresh socket every attempt — key
+    HTTPClient http;
+    http.begin(client, OLLAMA_URL);
+    http.addHeader("Content-Type", "application/json");
+    http.setTimeout(60000);
+    http.setReuse(false);          // don't reuse keep-alive connection
+
+    int code = http.POST(body);
+
+    if (code == 200) {
+      String reply = http.getString();
+      int keyPos = reply.indexOf("\"response\":\"");
+      if (keyPos >= 0) {
+        int start = keyPos + 12;
+        int end = reply.indexOf("\",\"done\"", start);
+        if (end > start) {
+          String answer = reply.substring(start, end);
+          answer.replace("\\n", "\n");
+          answer.replace("\\\"", "\"");
+          Serial.println("\nQwen: " + answer + "\n");
+        }
       }
-    } else {
-      Serial.println("No response field. Raw: " + reply);
+      http.end();
+      return;                      // success — bail out
     }
-  } else {
-    Serial.printf("HTTP %d — %s\n", code, http.errorToString(code).c_str());
+
+    Serial.printf("Attempt %d: HTTP %d, retrying...\n", attempt, code);
+    http.end();
+    delay(1500);                   // give hotspot / stack a beat
   }
-  http.end();
+
+  Serial.println("Gave up after 3 attempts.");
 }
 
 void setup() {

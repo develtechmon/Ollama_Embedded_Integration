@@ -1,8 +1,14 @@
 # Python 3.9
-pip install faster-whisper sounddevice
+pip install faster-whisper sounddevice soundfile
 pip install ollama
 pip install requests
 pip install piper-tts
 python -m piper.download_voices en_US-lessac-medium
 pip install pyserial
 pip install opencv-python
+
+# Python 3.11
+pip install ollama faster-whisper sounddevice soundfile kokoro-onnx pyserial numpy
+pip install opencv-contrib-python
+pip install piper-tts
+python -m piper.download_voices en_US-lessac-medium

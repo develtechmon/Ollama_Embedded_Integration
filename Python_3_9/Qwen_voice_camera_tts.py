@@ -22,6 +22,7 @@ IMAGE_FILE = "camera_frame.jpg"
 WHISPER_MODEL = "base.en"
 PIPER_VOICE_FILE = "en_US-lessac-medium.onnx"
 
+client = ollama.Client(host="http://127.0.0.1:11434")
 
 # ============================================================
 # LOAD AI MODELS
@@ -112,7 +113,7 @@ def ask_qwen_vision(image_path, user_question):
                     Reply in one or two short sentences because your response will be spoken aloud.
                     """
 
-    response = ollama.chat(
+    response = client.chat(
         model=MODEL,
         messages=[
             {
@@ -146,7 +147,7 @@ def ask_qwen_text(user_text):
         }
     )
 
-    response = ollama.chat(
+    response = client.chat(
         model=MODEL,
         messages=messages,
         think=False

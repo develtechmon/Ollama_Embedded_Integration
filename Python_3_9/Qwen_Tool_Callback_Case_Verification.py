@@ -2,6 +2,8 @@ import ollama
 
 MODEL = "qwen3.5:4b"
 
+client = ollama.Client(host="http://127.0.0.1:11434")
+
 def set_led(state: bool) -> str:
     return "ok"
 
@@ -34,7 +36,7 @@ CASES = [
 
 passed = 0
 for prompt, expected in CASES:
-    resp = ollama.chat(model=MODEL,
+    resp = client.chat(model=MODEL,
                        messages=[{"role": "user", "content": prompt}],
                        tools=TOOLS, think=False)
     calls = resp.message.tool_calls or []

@@ -7,6 +7,8 @@ MODEL = "qwen3.5:4b"
 CAMERA_INDEX = 0
 IMAGE_FILE = "camera_frame.jpg"
 
+client = ollama.Client(host="http://127.0.0.1:11434")
+
 def capture_image():
     cam = cv2.VideoCapture(CAMERA_INDEX)
     if not cam.isOpened():
@@ -22,7 +24,7 @@ def capture_image():
     return IMAGE_FILE
 
 def ask_qwen_about_image(image_path, question):
-    response = ollama.chat(
+    response = client.chat(
         model=MODEL,
         messages=[
             {

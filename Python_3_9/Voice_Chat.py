@@ -4,8 +4,12 @@ from faster_whisper import WhisperModel
 from piper import PiperVoice
 
 MODEL, SR = "qwen3.5:4b", 16000
+
+# Explicit client, pointed at localhost — doesn't matter what OLLAMA_HOST is set to system-wide.
+client = ollama.Client(host="http://127.0.0.1:11434")
+
 whisper = WhisperModel("base.en", device="cpu", compute_type="int8")
-voice = PiperVoice.load("en_US-lessac-high.onnx")
+voice = PiperVoice.load("en_US-lessac-medium.onnx")
 
 def listen(sec=5):
     input("\n[Enter, then speak...] ")
@@ -26,6 +30,6 @@ while True:
     print("You:", u)
     if "quit" in u.lower(): break
     msgs.append({"role":"user","content":u})
-    reply = ollama.chat(model=MODEL, messages=msgs, think=False).message.content
+    reply = client.chat(model=MODEL, messages=msgs, think=False).message.content
     msgs.append({"role":"assistant","content":reply})
     print("AI:", reply); say(reply)

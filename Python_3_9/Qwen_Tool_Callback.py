@@ -2,6 +2,8 @@ import ollama
 
 MODEL = "qwen3.5:4b"
 
+client = ollama.Client(host="http://127.0.0.1:11434")
+
 # The real function. ollama NEVER sees or introspects this — we call it ourselves.
 def set_led(state: bool) -> str:
     print(f"   >>> [hardware would fire here] set_led({state})")
@@ -33,7 +35,7 @@ DISPATCH = {"set_led": set_led}
 messages = [{"role": "user", "content": "it's dark in here, switch the led on"}]
 
 # think=False speeds it up; if your ollama client is old and rejects it, just delete that arg.
-resp = ollama.chat(model=MODEL, messages=messages, tools=TOOLS, think=False)
+resp = client.chat(model=MODEL, messages=messages, tools=TOOLS, think=False)
 print("tool_calls:", resp.message.tool_calls)
 
 if resp.message.tool_calls:
@@ -42,7 +44,7 @@ if resp.message.tool_calls:
         fn = DISPATCH.get(call.function.name)
         result = fn(**call.function.arguments) if fn else f"unknown tool: {call.function.name}"
         messages.append({"role": "tool", "tool_name": call.function.name, "content": str(result)})
-    final = ollama.chat(model=MODEL, messages=messages, think=False)
+    final = client.chat(model=MODEL, messages=messages, think=False)
     print("model says:", final.message.content)
 else:
     print("!! NO tool call — the model just talked instead. That's the failure to watch for.")
